@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js效果--轮播</title>
+	<style>
+		*{
+			margin:0;
+			padding:0;
+		}
+		li{
+			list-style: none;
+		}
+		a{
+			text-decoration: none;
+		}
+		body{
+			background:#000;
+		}
+		img{
+			width:500px;
+			height:700px;
+			border:0;
+		}
+		#box{
+			width:500px;
+			height:700px;
+			border:7px solid lightyellow;
+			border-shadow:3px 3px 3px #ccc;
+			overflow:hidden;
+			margin:30px auto;
+			position:relative;
+		}
+		ul{
+			position:absolute;
+			left:0;
+			height:700px;
+			width:1500px;
+		}
+		ul>li{
+			float:left;
+			width:500px;
+			height:100%;
+		}
+		#left,#right{
+			position:absolute;
+			top:37%;
+			width:71px;
+			height:71px;
+			line-height:71px;
+			text-align:center;
+			background:#dec;
+			color:#fff;
+			font-size:37px;
+			font-weight:bold;
+			z-index:999;
+			display:none;
+		}
+		#left{
+			left:0;
+		}
+		#right{
+			right:0;
+		}
+		p#ball{
+			position:absolute;
+			bottom:7px;
+			left:27%;
+			z-index:999;
+		}
+		p#ball>b{
+			display:inline-block;
+			width:71px;
+			height:71px;
+			line-height:71px;
+			text-align:center;
+			font-size: 37px;
+			font-weight:bold;
+			background:#dec;
+			border-radius: 50%;
+			margin-right:7px;
+		}
+		p#ball>b.active{
+			background:lightblue;
+			color:#fff;
+		}
+	</style>
+	<script>
+		;window.onload=function(){
+			var box = document.querySelector("#box")
+			,	left = document.querySelector("#left")
+			,	right = document.querySelector("#right")
+			,	ul = document.querySelector("ul")
+			,	li = document.querySelector("li")
+			,   ball = document.querySelector("#ball").querySelectorAll("b");
+
+			//定义ul的宽度和li的宽度
+			var ulWidth = ul.offsetWidth
+			,	liWidth = li.offsetWidth;
+
+			//定时器
+			var time;
+
+			//计数器
+			var count = 0;
+
+			function fn(){
+
+				//让当前显示的图片对应下面的数字
+				for(var i = 0; i < ball.length; i++){
+
+					//把box下面所有a标签的class给移除
+					ball[i].removeAttribute("class");
+				}
+				count++;
+
+				//当计数器大于8的时候，把计数器归0
+				if(count > 2){
+					count = 0;
+				}
+
+				//给当前显示图片对应的数字添加class="active"
+				ball[count].className = "active";
+
+				//获取ul的左边距
+				var ulLeft = ul.offsetLeft;
+					ulLeft -= liWidth;
+					if(Math.abs(ulLeft) >= ulWidth){
+						ulLeft = 0;
+					}
+
+					//改变ul的
+					ul.style.left = ulLeft + "px";
+			}
+
+			time = setInterval(fn,1000);
+
+			//鼠标滑过
+			box.onmouseover = function(){
+				//清空定时器
+				clearInterval(time);
+
+				//左右按钮显示
+				left.style.display = "block";
+				right.style.display = "block";
+			}
+
+			//鼠标离开
+			box.onmouseout = function (){
+
+				//左右按钮隐藏
+				left.style.display = "none";
+				right.style.display = "none";
+
+				//定时器重新运转
+				time = setInterval(function (){
+					//让当前显示的图片对应下面的数字
+					for(var i = 0; i < ball.length; i++){
+
+						//把box下面所有a标签的class给移除
+						ball[i].removeAttribute("class");
+					}
+					count++;
+
+					//当计数器大于8的时候，把计数器归0
+					if(count > 2){
+						count = 0;
+					}
+
+					//给当前显示图片对应的数字添加class="active"
+					ball[count].className="active";
+
+					//获取ul的左边距
+					var ulLeft = ul.offsetLeft;
+						ulLeft -= liWidth;
+						if(Math.abs(ulLeft) >= ulWidth){
+							ulLeft = 0;
+						}
+
+					//改变ul的
+					ul.style.left = ulLeft + "px";
+				},1000)
+			}
+
+			//点击左按钮
+			left.onclick = function (){
+				//让当前显示的图片对应下面的数字
+				for(var i = 0; i < ball.length; i++){
+
+					//把box下面所有a标签的class给移除
+					ball[i].removeAttribute("class");
+				}
+				count--;
+
+					//当计数器小于0的时候，把计数器归2
+					if(count < 0){
+						count = 2;
+					}
+
+				//给当前显示图片对应的数字添加class="active"
+				ball[count].className="active";
+					//获取ul的左边距
+					var ulLeft = ul.offsetLeft;
+						if(Math.abs(ulLeft) <= 0){
+							ulLeft = -ulWidth +liWidth ;
+						} else {
+						  ulLeft += liWidth;
+						}
+
+					//改变ul的
+					ul.style.left = ulLeft + "px";	
+			}
+
+			//点击右按钮
+			right.onclick = function (){
+				//让当前显示的图片对应下面的数字
+				for(var i = 0; i < ball.length; i++){
+
+					//把box下面所有a标签的class给移除
+					ball[i].removeAttribute("class");
+				}
+				count++;
+
+				//当计数器大于2的时候，把计数器归0
+				if(count > 2){
+					count = 0;
+				}
+
+				//给当前显示图片对应的数字添加class="active"
+				ball[count].className = "active";
+
+				//获取ul的左边距
+				var ulLeft = ul.offsetLeft;
+					ulLeft -= liWidth;
+					if(Math.abs(ulLeft) >= ulWidth){
+						ulLeft = 0;
+					}
+
+				//改变ul的
+				ul.style.left = ulLeft + "px";
+			}
+
+			//给所有的小球添加点击事件
+			for(var i = 0; i < ball.length; i++){
+				ball[i].index = i;
+				ball[i].onclick = function (){
+					count = this.index;
+					for(var i = 0; i < ball.length; i++){
+						ball[i].removeAttribute("class");
+					}
+					ball[this.index].className = "active";
+					ul.style.left = -this.index*liWidth + "px";
+				}
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="box" class="box">
+		<span id="left">&lt;</span>
+		<span id="right">&gt;</span>
+		<ul>
+			<li><img src="img/1.jpg" alt=""></li>
+			<li><img src="img/2.jpg" alt=""></li>
+			<li><img src="img/3.jpg" alt=""></li>
+		</ul>
+		<p id="ball" class="ball">
+			<b class="active">1</b>
+			<b>2</b>
+			<b>3</b>
+		</p>	
+	</div>
+</body>
+</html>
